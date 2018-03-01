@@ -1,3 +1,2 @@
-export default function(){
-    return [...[1,2,3]];
-}
+var a = {...{a:1}, ...{b:2}};
+console.log(a);
