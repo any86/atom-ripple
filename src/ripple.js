@@ -10,7 +10,7 @@
  * !!! 要求目标元素的position非static
  */
 
-import './ripple.scss';
+// import './ripple.scss';
 import defaultConfig from './module/config';
 import touchStart from './module/touchStart';
 import touchMove from './module/touchMove';
