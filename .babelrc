@@ -4,12 +4,6 @@
       "stage-2"
     ],
     // "plugins": ["transform-runtime"],
-    "comments": false,
-    "env": {
-      "test": {
-        "presets": ["env", "stage-3"],
-        "plugins": [ "istanbul" ]
-      }
-    }
+    "comments": false
   }
   

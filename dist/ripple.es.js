@@ -1,19 +1,3 @@
-'use strict';
-
-var cssNameSpace = 'ripple';
-var duration = 600;
-var background = 'currentColor';
-var zIndex = 1;
-var isDisabled = false;
-
-var defaultConfig = {
-    cssNameSpace: cssNameSpace,
-    background: background,
-    duration: duration,
-    zIndex: zIndex,
-    isDisabled: isDisabled
-};
-
 function createRippleNode (_ref) {
     var top = _ref.top,
         left = _ref.left,
@@ -173,58 +157,56 @@ function touchEnd (event) {
     }
 }
 
-var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+var cssNameSpace = 'ripple';
+var duration = 600;
+var background = 'currentColor';
+var zIndex = 1;
+var isDisabled = false;
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var copyOptsToEl = function copyOptsToEl(el, options) {
-    for (var k in options) {
-        var value = options[k];
-        var letterArray = k.split('');
-        letterArray[0] = letterArray[0].toUpperCase();
-        var key = letterArray.join('');
-        el.dataset['ripple' + key] = value;
-    }
+var defaultConfig = {
+    cssNameSpace: cssNameSpace,
+    background: background,
+    duration: duration,
+    zIndex: zIndex,
+    isDisabled: isDisabled
 };
 
-var Ripple = function () {
-    function Ripple(el, config) {
-        _classCallCheck(this, Ripple);
+var runRipple = function runRipple(el, binding) {
+    var cssNameSpace = defaultConfig.cssNameSpace,
+        background = defaultConfig.background,
+        duration = defaultConfig.duration;
 
-        var options = _extends({}, defaultConfig, config);
+    var bindingValue = binding.value || {};
 
-        if (options.isDisabled) return;
-        this.$el = el;
+    el.dataset.rippleBackground = bindingValue.background || background;
+    el.dataset.rippleDuration = bindingValue.duration || duration;
+    el.dataset.rippleIsDisabled = false === bindingValue || bindingValue.isDisabled;
+    el.dataset.rippleCssNameSpace = bindingValue.cssNameSpace || cssNameSpace;
 
-        copyOptsToEl(el, options);
+    el.addEventListener('touchstart', touchStart);
+    el.addEventListener('touchmove', touchMove);
+    el.addEventListener('touchend', touchEnd);
+};
 
-        this.$el.addEventListener('touchstart', touchStart);
-
-        this.$el.addEventListener('touchmove', touchMove);
-
-        this.$el.addEventListener('touchend', touchEnd);
+var plugin = {
+    install: function install(Vue) {
+        Vue.directive('ripple', {
+            inserted: function inserted(el, binding) {
+                runRipple(el, binding);
+            },
+            componentUpdated: function componentUpdated(el, binding) {
+                runRipple(el, binding);
+            },
+            unbind: function unbind(el) {
+                el.removeEventListener('touchstart', touchStart);
+                el.removeEventListener('touchmove', touchMove);
+                el.removeEventListener('touchend', touchEnd);
+            }
+        });
     }
+};
+if (typeof window !== 'undefined' && window.Vue) {
+    window.Vue.use(plugin);
+}
 
-    _createClass(Ripple, [{
-        key: 'update',
-        value: function update(config) {
-            var options = _extends({}, defaultConfig, config);
-            if (options.isDisabled) return;
-            copyOptsToEl(el, options);
-        }
-    }, {
-        key: 'destroy',
-        value: function destroy(el) {
-            this.$el = el || this.$el;
-            this.$el.removeEventListener('touchstart', touchStart);
-            this.$el.removeEventListener('touchmove', touchMove);
-            this.$el.removeEventListener('touchend', touchEnd);
-        }
-    }]);
-
-    return Ripple;
-}();
-
-module.exports = Ripple;
+export default plugin;
