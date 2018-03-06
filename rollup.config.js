@@ -6,7 +6,7 @@ import sass from 'rollup-plugin-sass';
 export default [{
     input: 'src/index.js',
     output: {
-        file: 'dist/ripple.es.js',
+        file: 'dist/ripple.esm.js',
         format: 'es'
     },
     plugins: [
@@ -27,7 +27,7 @@ export default [{
     input: 'src/index.js',
     output: {
         name: 'Ripple',
-        file: 'dist/ripple.umd.min.js',
+        file: 'dist/ripple.umd.js',
         format: 'umd'
     },
     plugins: [
@@ -43,6 +43,6 @@ export default [{
             runtimeHelpers: true,
             exclude: 'node_modules/**' // 只编译我们的源代码
         }),
-        uglify()
+        // uglify()
     ]
 }];

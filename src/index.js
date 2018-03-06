@@ -1,4 +1,3 @@
-// import Vue from 'vue';
 import './ripple.scss';
 import touchStart from './module/touchStart.js';
 import touchMove from './module/touchMove.js';
